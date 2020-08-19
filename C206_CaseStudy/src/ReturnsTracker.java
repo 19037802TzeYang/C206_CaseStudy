@@ -13,7 +13,7 @@ public class ReturnsTracker {
 		ArrayList<Customer> customerList = new ArrayList<Customer>();
 
 		customerList.add(new Customer("test", "testuser", "pass"));
-		productList.add(new Product("111", "Pan", 20, "PanMaster"));
+		productList.add(new Product("111", "Pan", 20, "PanMaster", ""));
 
 		// North Outlet initialize
 		ArrayList<Staff> staffListNorth = new ArrayList<Staff>();
