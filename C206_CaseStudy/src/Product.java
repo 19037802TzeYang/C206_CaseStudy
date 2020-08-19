@@ -1,19 +1,20 @@
 public class Product {
 	private String productId;
 	private String name;
-	
+	private String category;
 	/**
 	 * @param productId
 	 * @param name
 	 * @param price
 	 * @param vendorName
 	 */
-	public Product(String productId, String name, double price, String vendorName) {
+	public Product(String productId, String name, double price, String vendorName, String category) {
 		super();
 		this.productId = productId;
 		this.name = name;
 		this.price = price;
 		this.vendorName = vendorName;
+		this.category = category;
 	}
 	
 	/**
@@ -22,6 +23,8 @@ public class Product {
 	public String getProductId() {
 		return productId;
 	}
+	
+	
 	/**
 	 * @param productId the productId to set
 	 */
@@ -70,6 +73,15 @@ public class Product {
 	public String getConditions() {
 		return conditions;
 	}
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	/**
 	 * @param conditions the conditions to set
 	 */
