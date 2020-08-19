@@ -28,6 +28,9 @@ public class C206_CaseStudy {
 						
 					} else if (inputoption == 2) {
 						C206_CaseStudy.viewAllCategory(productList, "clothing");
+						
+					} else if (inputoption == 3) {
+						C206_CaseStudy.deleteALLProducts(productList, "clothing");
 					}
 					
 					
@@ -43,6 +46,10 @@ public class C206_CaseStudy {
 						
 					} else if (inputoption == 2) {
 						C206_CaseStudy.viewAllCategory(beverageList, "beverage");
+						
+					} else if (inputoption == 3) {
+						
+						C206_CaseStudy.deleteALLProducts(productList, "beverage");
 					}
 
 				}
@@ -126,11 +133,35 @@ public class C206_CaseStudy {
 		return cc;
 		
 	}
-	/*
-	public static void deleteProduct(ArrayList<Product> productList, Product product) {
-		
-		productList.delete(product);
-		System.out.println("product delete");
-	}
-	*/
+	
+    
+	public static boolean deleteProduct(ArrayList<Product> productList, String id) {
+	        boolean isDelete = false;
+
+
+	        for (int i = 0; i < productList.size(); i++) {
+	            if (id.equalsIgnoreCase(productList.get(i).getProductId())) {
+	            	productList.remove(i);
+	                isDelete = true;
+	            }
+	        }
+	        return isDelete;
+
+
+	    }
+
+
+	public static void deleteALLProducts(ArrayList<Product> productList, String category) {
+	        C206_CaseStudy.viewAllCategory(productList, category);
+	        String id = Helper.readString("Enter ID > ");
+	        Boolean isDelete = deleteProduct(productList, id);
+
+	        
+	        if (isDelete == false) {
+	            System.out.println("Invalid ID");
+	        } else {
+	            System.out.println(id + " has been deleted");
+	        }
+	    }
+	
 	}
