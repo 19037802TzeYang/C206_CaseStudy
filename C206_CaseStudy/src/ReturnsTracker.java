@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ReturnsTracker {
-
+	private static final int ADDCUS = 1;
+	private static final int VIEWCUS = 2;
+	private static final int DELETECUS = 3;
 	public static void main(String[] args) {
 
 		// Global Store
@@ -13,6 +15,7 @@ public class ReturnsTracker {
 		ArrayList<Customer> customerList = new ArrayList<Customer>();
 
 		customerList.add(new Customer("test", "testuser", "pass"));
+		customerList.add(new Customer("test", "testuser2", "pass"));
 		productList.add(new Product("111", "Pan", 20, "PanMaster", ""));
 
 		// North Outlet initialize
@@ -27,7 +30,7 @@ public class ReturnsTracker {
 		// Program
 		int option = 0;
 
-		while (option != 3) {
+		while (option != 4) {
 
 			if (option == 1) {
 				// Customers
@@ -47,7 +50,7 @@ public class ReturnsTracker {
 
 				int retailerOption = 0;
 
-				while (retailerOption != 4) {
+				while (retailerOption != 5) {
 					if (retailerOption == 1) {
 						viewTransactions(transactionList);
 						
@@ -57,15 +60,38 @@ public class ReturnsTracker {
 					} else if (retailerOption == 3) {
 						viewTransactions(archiveList);
 						
+					} else if (retailerOption == 4) {
+						//--update customer return(policy) history--//
+						updateReturnHistory(transactionList, archiveList);
+						//--//
 					}
-
 					ReturnsTracker.setHeader("RETAILER MENU");
 					System.out.println("1. View transactions");
 					System.out.println("2. Archive transactions");
 					System.out.println("3. View archive");
-					System.out.println("4. Quit");
+					System.out.println("4. Update return history");
+					System.out.println("5. Quit");
 					retailerOption = Helper.readInt("Enter option: ");
+				} 
+			} else if (option == 3) {
+				// Administrator
+				//--Manage Customer (add customer, view customer, delete customer)--//
+				int administratorOption = 0;
+				while (administratorOption != 5) {
+					manageCusMenu();
+					option = Helper.readInt("Enter option > ");
+					if (option == ADDCUS) {
+						Customer cObj = inputCustomer();
+						addCustomer(customerList, cObj);
+					} else if (option == VIEWCUS) {
+						viewCustomer(customerList);
+					} else if (option == DELETECUS) {
+						deleteCustomer(customerList);
+					} else if (option == 4) {
+						System.out.println("GoodBye");
+					} 
 				}
+				//--//
 			}
 
 			menu();
@@ -161,15 +187,118 @@ public class ReturnsTracker {
 		System.out.println("Transaction archived!");
 	}
 
+	//--update customer return(policy) history--//
+	public static void updateReturnHistory(ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList) {
+		setHeader("UPDATE RETURN HISTORY");
+		viewTransactions(archiveList);
+
+		int no;
+		do {
+			// take input from available transactions if input is -1 loop will stop
+			no = Helper.readInt("Enter No to update or -1 to cancel > ");
+			// if no is -1 exit from loop
+			if (no == -1) {
+				break;
+			} else if (no < 1 || no > archiveList.size()) {
+				System.out.println("Invalid!");
+			} else {
+				// if transaction no is valid take updated policy and status
+				String action = Helper.readString("Enter policy to update > ");
+				String status = Helper.readString("Enter status to update > ");
+				// set the policy and status in particular archive list
+				archiveList.get(no - 1).setAction(action);
+				archiveList.get(no - 1).setStatus(status);
+				System.out.println("Transaction updated!");
+				// If status is changed to 'Pending' move the transaction from archive to
+				// transactionList
+				if (archiveList.get(no - 1).getStatus().equals("Pending")) {
+					transactionList.add(archiveList.remove(no - 1));
+					System.out.println("Transaction Moved from Archive!");
+					break;
+				}
+			}
+		} while (no != -1);
+	}
+	//--//
+
+	//--manage customer (add customer, view customer, delete customer)--//
+	// return customer object
+	public static Customer inputCustomer() {
+		Helper.line(40, "-");
+		System.out.println("ADD NEW CUSTOMER");
+		String name = Helper.readString("Enter Name > ");
+		String userName = Helper.readString("Enter User Name > ");
+		String password = Helper.readString("Enter Password No > ");
+
+		Customer cObj = new Customer(name, userName, password);
+		return cObj;
+	}
+
+	public static void addCustomer(ArrayList<Customer> customerList, Customer cObj) {
+		customerList.add(cObj);
+		System.out.println("Customer Added!");
+	}
+
+	// return customer string
+	public static String retriveAllCustomer(ArrayList<Customer> customerList) {
+		String output = "";
+		for (Customer c : customerList) {
+			output += String.format("%-10s %-10s %-16s %s\n", c.getName(), c.getUsername(), c.getPassword(),
+					c.getRewardPoints());
+		}
+		return output;
+	}
+
+	public static void viewCustomer(ArrayList<Customer> customerList) {
+		Helper.line(50, "-");
+		String output = String.format("%-10s %-10s %-16s %s\n", "NAME", "USERNAME", "PASSWORD", "REWARD POINTS");
+		output += retriveAllCustomer(customerList);
+		System.out.println(output);
+	}
+
+	// return boolean value if customerList is removed
+	public static boolean removeCustomer(ArrayList<Customer> customerList, String username) {
+		boolean isRemoved = false;
+		for (int i = 0; i < customerList.size(); i++) {
+			if (username.contentEquals(customerList.get(i).getUsername())) {
+				customerList.remove(i);
+				isRemoved = true;
+			}
+		}
+		return isRemoved;
+	}
+
+	public static void deleteCustomer(ArrayList<Customer> customerList) {
+		viewCustomer(customerList);
+		String username = Helper.readString("Enter username to remove customer > ");
+		Boolean isRemoved = removeCustomer(customerList, username);
+		if (isRemoved) {
+			System.out.println("Customer Removed!");
+		} else {
+			System.out.println("Username not found!");
+		}
+	}
+	// --//
+
 	// Menu
 	public static void menu() {
 		ReturnsTracker.setHeader("Diso Tracking System");
 		System.out.println("1. Customer");
 		System.out.println("2. Retailer");
-		System.out.println("3. Quit");
+		System.out.println("3. Administrator");
+		System.out.println("4. Quit");
 		Helper.line(80, "-");
-
 	}
+	
+	//--manage customer menu--//
+	public static void manageCusMenu() {
+		ReturnsTracker.setHeader("Manage Customer Menu");
+		System.out.println("1. Add Customer");
+		System.out.println("2. View Customer");
+		System.out.println("3. Delete Customer");
+		System.out.println("5. Quit");
+	}
+	//--//
 
 	public static void setHeader(String header) {
 		Helper.line(80, "-");

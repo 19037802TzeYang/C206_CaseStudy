@@ -104,8 +104,21 @@ public class ReturnsTrackerTest {
 
 		assertSame("Test that transaction is added same as 1st archived list?", t1, archiveList.get(0));
 	}
-
 	
+	//--update customer return(policy) history test--//
+	@Test
+	public void updateReturnHistoryTest() {
+		// Given an empty list, after adding 1 Transaction, the size of the list is 1
+		ReturnsTracker.addTransaction(transactionList, t1);
+		// Archive transaction, archiveList size = 1, transactionList size = 0
+		ReturnsTracker.archiveTransaction(transactionList, archiveList, 0);
+		// Given that archieveList size = 1, after update 1 transaction, transactionList size = 1, archieveList size = 0
+		ReturnsTracker.updateReturnHistory(transactionList, archiveList);
+		
+		assertEquals("Test that transaction arraylist size is 1?", 1, transactionList.size());
+		assertEquals("Test that transaction arraylist size is 0?", 0, archiveList.size());
+	}
+	//--// 
 
 	@After
 	public void tearDown() throws Exception {
