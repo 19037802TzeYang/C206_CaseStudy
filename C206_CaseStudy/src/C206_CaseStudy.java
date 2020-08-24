@@ -6,14 +6,14 @@ public class C206_CaseStudy {
 	
 	private static ArrayList<Staff> staffList;
 
-<<<<<<< HEAD
+
 	public static void outlets(String outlets) {
-	
 		//add some data to the list
 		Outlet Outlet1 = new Outlet(01 , "Ang Mo Kio Hub", staffList );
 		Outlet Outlet2 = new Outlet(02, "Junction 8", staffList);
 		Outlet Outlet3 = new Outlet(03, "Toa Payoh Hub", staffList);
-=======
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 			ArrayList<Product> productList = new ArrayList<Product>();
@@ -76,10 +76,10 @@ public class C206_CaseStudy {
 		System.out.println("2. Beverage");
 		Helper.line(80, "-");
 
->>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy
+
 	}
 	
-<<<<<<< HEAD
+
 	public static void delOutlet(String Outlet) {
 		//clean up the data in the list
 		for (int i = 0; i < outletList.size(); i++) {
@@ -137,16 +137,16 @@ public class C206_CaseStudy {
 	
 	}
 	
-=======
+
 	public static void Clothingmenu() {
 		System.out.println("Product section");
 		System.out.println("1. Add a new clothing");
 		System.out.println("2. View all clothings");
 		System.out.println("3. Delete existing clothing");
 		Helper.line(80, "-");
->>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy
+	}
 
-<<<<<<< HEAD
+
 	//==========Option 1 ==============
 	public static void viewOutlet() {
 		//display all bikes in the list
@@ -205,9 +205,9 @@ public class C206_CaseStudy {
 		return null;
 		//format and return the string
 	}
-}
-=======
-	}
+
+
+	
 	
 	public static void Beveragemenu() {
 		System.out.println("Beverage section");
@@ -299,4 +299,4 @@ public class C206_CaseStudy {
 	    }
 	
 	}
->>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy
+
