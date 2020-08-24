@@ -64,7 +64,7 @@ public class ReturnsTracker {
 
 						if (customerOption == 1) {
 							transactionMenu(transactionList, user, staffList);
-							
+
 						} else if (customerOption == 2) {
 							ArrayList<Transaction> userList = new ArrayList<Transaction>();
 
@@ -291,11 +291,11 @@ public class ReturnsTracker {
 
 	// --update customer return(policy) history--//
 	public static void updateReturnHistory(ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList) {
-		setHeader("UPDATE RETURN HISTORY");
-		viewTransactions(archiveList);
 
-		int no;
+		int no = 0;
 		do {
+			setHeader("UPDATE RETURN HISTORY");
+			viewTransactions(archiveList);
 			// take input from available transactions if input is -1 loop will stop
 			no = Helper.readInt("Enter No to update or -1 to cancel > ");
 			// if no is -1 exit from loop
@@ -304,26 +304,57 @@ public class ReturnsTracker {
 			} else if (no < 1 || no > archiveList.size()) {
 				System.out.println("Invalid!");
 			} else {
-				// if transaction no is valid take updated policy and status
-				String action = Helper.readString("Enter policy to update > ");
-				String status = Helper.readString("Enter status to update > ");
-				// set the policy and status in particular archive list
-				archiveList.get(no - 1).setAction(action);
-				archiveList.get(no - 1).setStatus(status);
-				System.out.println("Transaction updated!");
-				// If status is changed to 'Pending' move the transaction from archive to
-				// transactionList
-				if (archiveList.get(no - 1).getStatus().equals("Pending")) {
-					transactionList.add(archiveList.remove(no - 1));
-					System.out.println("Transaction Moved from Archive!");
-					break;
+				// if transaction no is valid take updated values
+				int updationOption = 0;
+				// check if transaction is updated in order to move transaction from archive
+				boolean updated = false;
+
+				while (updationOption != 3) {
+					System.out.println("\nUPDATE MENU");
+					System.out.println("Enter 1 to update Policy ");
+					System.out.println("Enter 2 to update Product Name ");
+					System.out.println("Enter 3 to Quit \n");
+					updationOption = Helper.readInt("Choose Option > ");
+
+					if (updationOption == 1) {
+						updatePolicy(archiveList, no - 1);
+						updated = true;
+					} else if (updationOption == 2) {
+						updateProductName(archiveList, no - 1);
+						updated = true;
+					} else if(updationOption == 3) {
+						if(updated == true) {
+							archiveList.get(no - 1).setStatus("Pending");
+							moveToTransactionList(transactionList, archiveList, no - 1);
+						}
+					}
 				}
 			}
 		} while (no != -1);
 	}
-	// --//
 
-	// --manage customer (add customer, view customer, delete customer)--//
+	private static void updateProductName(ArrayList<Transaction> archiveList, int index) {
+		String productName = Helper.readString("Enter Product name to update > ");
+		archiveList.get(index).getProductInfo().setName(productName);
+		System.out.println("Transaction updated!\n");
+
+	}
+
+	private static void updatePolicy(ArrayList<Transaction> archiveList, int index) {
+		String action = Helper.readString("Enter policy to update > ");
+		// set the policy in particular archive list
+		archiveList.get(index).setAction(action);
+		System.out.println("Transaction updated!\n");
+
+	}
+
+	private static void moveToTransactionList(ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList, int index) {
+		transactionList.add(archiveList.remove(index));
+		System.out.println("Transaction Moved from Archive!\n");
+	}
+	//--//
+
+	//--manage customer (add customer, view customer, delete customer)--//
 	// return customer object
 	public static Customer inputCustomer() {
 		Helper.line(40, "-");
