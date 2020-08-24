@@ -18,4 +18,9 @@ public class Staff extends Person {
 		return staffId;
 	}
 
+	public String returnString() {
+		String output = String.format("%-5s %-10s\n", staffId, super.getName());
+		return output;
+	}
+
 }

@@ -5,6 +5,7 @@ public class ReturnsTracker {
 	private static final int ADDCUS = 1;
 	private static final int VIEWCUS = 2;
 	private static final int DELETECUS = 3;
+
 	public static void main(String[] args) {
 
 		// Global Store
@@ -14,18 +15,30 @@ public class ReturnsTracker {
 		ArrayList<Product> productList = new ArrayList<Product>();
 		ArrayList<Customer> customerList = new ArrayList<Customer>();
 
-		customerList.add(new Customer("test", "testuser", "pass"));
-		customerList.add(new Customer("test", "testuser2", "pass"));
+		Customer c1 = new Customer("test", "testuser", "pass");
+		Customer c2 = new Customer("test2", "testuser2", "pass");
+		customerList.add(c1);
+		customerList.add(c2);
 		productList.add(new Product("111", "Pan", 20, "PanMaster", ""));
 
-		// North Outlet initialize
-		ArrayList<Staff> staffListNorth = new ArrayList<Staff>();
-		staffListNorth.add(new Staff("Bob", 341));
-		staffListNorth.add(new Staff("Jane", 301));
+		// Outlet initialize
+		ArrayList<Staff> staffList = new ArrayList<Staff>();
+		Staff s1 = new Staff("Bob", 100);
+		Staff s2 = new Staff("Jane", 200);
 
-		Outlet northOutlet = new Outlet(0, "North Avenue 9", staffListNorth);
+		staffList.add(s1);
+		staffList.add(s2);
 
-		outletList.add(northOutlet);
+		Product p1 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing");
+		Product p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage");
+		productList.add(p1);
+
+		transactionList.add(new Transaction("1000", c1, "Top Up", s1, p1));
+		transactionList.add(new Transaction("2000", c2, "Refund", s2, p2));
+
+		Outlet outlet1 = new Outlet(0, "North Avenue 9", staffList);
+
+		outletList.add(outlet1);
 
 		// Program
 		int option = 0;
@@ -34,13 +47,41 @@ public class ReturnsTracker {
 
 			if (option == 1) {
 				// Customers
-				ReturnsTracker.setHeader("CUSTOMER MENU");
-
 				Customer user = customerLogin(customerList);
 
 				if (user != null) {
 					System.out.println("Login success!");
-					transactionMenu(transactionList, user, staffListNorth);
+
+					int customerOption = 0;
+
+					while (customerOption != 4) {
+						setHeader("Customer Menu");
+						System.out.println("1. Return product");
+						System.out.println("2. View returns history");
+						System.out.println("3. View reward points");
+						System.out.println("4. Quit");
+						customerOption = Helper.readInt("Enter option: ");
+
+						if (customerOption == 1) {
+							transactionMenu(transactionList, user, staffList);
+							
+						} else if (customerOption == 2) {
+							ArrayList<Transaction> userList = new ArrayList<Transaction>();
+
+							for (Transaction t : transactionList) {
+								if (t.getCustomerInfo().getUsername().equals(user.getUsername())) {
+									userList.add(t);
+								}
+							}
+
+							viewTransactions(userList);
+
+						} else if (customerOption == 3) {
+							System.out.println("Username: " + user.getUsername());
+							System.out.println("Reward Points: " + user.getRewardPoints());
+						}
+					}
+
 				} else {
 					System.out.println("Invalid credentials.");
 				}
@@ -50,34 +91,41 @@ public class ReturnsTracker {
 
 				int retailerOption = 0;
 
-				while (retailerOption != 5) {
+				while (retailerOption != 6) {
 					if (retailerOption == 1) {
 						viewTransactions(transactionList);
-						
+
 					} else if (retailerOption == 2) {
 						archiveMenu(transactionList, archiveList);
-						
+
 					} else if (retailerOption == 3) {
 						viewTransactions(archiveList);
-						
+
 					} else if (retailerOption == 4) {
-						//--update customer return(policy) history--//
+						// --update customer return(policy) history--//
 						updateReturnHistory(transactionList, archiveList);
-						//--//
+						// --//
+					} else if (retailerOption == 5) {
+						viewTransactions(transactionList);
+
+						int choice = Helper.readInt("Select transaction to update: ");
+						updateTransaction(transactionList.get(choice - 1), staffList);
 					}
+
 					ReturnsTracker.setHeader("RETAILER MENU");
 					System.out.println("1. View transactions");
 					System.out.println("2. Archive transactions");
 					System.out.println("3. View archive");
 					System.out.println("4. Update return history");
-					System.out.println("5. Quit");
+					System.out.println("5. Update transaction");
+					System.out.println("6. Quit");
 					retailerOption = Helper.readInt("Enter option: ");
-				} 
+				}
 			} else if (option == 3) {
 				// Administrator
-				//--Manage Customer (add customer, view customer, delete customer)--//
+				// --Manage Customer (add customer, view customer, delete customer)--//
 				int administratorOption = 0;
-				while (administratorOption != 5) {
+				while (administratorOption != 4) {
 					manageCusMenu();
 					option = Helper.readInt("Enter option > ");
 					if (option == ADDCUS) {
@@ -89,14 +137,15 @@ public class ReturnsTracker {
 						deleteCustomer(customerList);
 					} else if (option == 4) {
 						System.out.println("GoodBye");
-					} 
+					}
 				}
-				//--//
+				// --//
 			}
 
 			menu();
 			option = Helper.readInt("Enter option: ");
 		}
+
 	}
 
 	// Customer login
@@ -137,8 +186,9 @@ public class ReturnsTracker {
 		Random rand = new Random();
 		int id = rand.nextInt(5000);
 		int staffIndex = rand.nextInt(staffList.size());
+		Product p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage");
 
-		Transaction t = new Transaction(Integer.toString(id), c, action, staffList.get(staffIndex));
+		Transaction t = new Transaction(Integer.toString(id), c, action, staffList.get(staffIndex), p2);
 
 		addTransaction(transactionList, t);
 	}
@@ -153,15 +203,15 @@ public class ReturnsTracker {
 		String output = "";
 		for (int i = 0; i < transactionList.size(); i++) {
 			Transaction t = transactionList.get(i);
-			output += String.format("%-5s %-50s", i + 1, t.returnString());
+			output += String.format("%-5s %-60s", i + 1, t.returnString());
 		}
 		return output;
 	}
 
 	public static void viewTransactions(ArrayList<Transaction> transactionList) {
 		ReturnsTracker.setHeader("Transaction List");
-		String output = String.format("%-5s %-5s %-10s %-10s %-10s %-10s\n", "No.", "ID", "Customer", "Staff", "Action",
-				"Status");
+		String output = String.format("%-5s %-5s %-10s %-10s %-20s %-10s %-10s\n", "No.", "ID", "Customer", "Staff",
+				"Product", "Action", "Status");
 		output += retrieveTransactions(transactionList);
 		System.out.println(output);
 	}
@@ -187,7 +237,59 @@ public class ReturnsTracker {
 		System.out.println("Transaction archived!");
 	}
 
-	//--update customer return(policy) history--//
+	public static void updateTransaction(Transaction t, ArrayList<Staff> staffList) {
+		setHeader("UPDATE TRANSACTION");
+
+		ArrayList<Transaction> viewList = new ArrayList<Transaction>();
+		viewList.add(t);
+
+		viewTransactions(viewList);
+
+		int option = -1;
+
+		while (option != 4) {
+			System.out.println("1. Change return type");
+			System.out.println("2. Change staff");
+			System.out.println("3. Change product");
+			System.out.println("4. Change status");
+			System.out.println("4. EXIT");
+			option = Helper.readInt("Enter option: ");
+
+			if (option == 1) {
+				String action = Helper.readString("Enter new return type (Refund/Exchange/Top Up): ");
+				t.setAction(action);
+			} else if (option == 2) {
+				viewStaff(staffList);
+				int choice = Helper.readInt("Enter new staff No. : ");
+				t.setStaffInfo(staffList.get(choice - 1));
+
+			} else if (option == 3) {
+
+			}
+			viewTransactions(viewList);
+		}
+	}
+
+	// Staff
+	public static String retrieveStaff(ArrayList<Staff> staffList) {
+		String output = "";
+		for (int i = 0; i < staffList.size(); i++) {
+			Staff s = staffList.get(i);
+			output += String.format("%-5s %-15s", i + 1, s.returnString());
+		}
+		return output;
+	}
+
+	public static void viewStaff(ArrayList<Staff> staffList) {
+		ReturnsTracker.setHeader("Staff List");
+		String output = String.format("%-5s %-5s %-10s\n", "No.", "ID", "Name");
+		output += retrieveStaff(staffList);
+		System.out.println(output);
+	}
+
+	// public static void
+
+	// --update customer return(policy) history--//
 	public static void updateReturnHistory(ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList) {
 		setHeader("UPDATE RETURN HISTORY");
 		viewTransactions(archiveList);
@@ -219,9 +321,9 @@ public class ReturnsTracker {
 			}
 		} while (no != -1);
 	}
-	//--//
+	// --//
 
-	//--manage customer (add customer, view customer, delete customer)--//
+	// --manage customer (add customer, view customer, delete customer)--//
 	// return customer object
 	public static Customer inputCustomer() {
 		Helper.line(40, "-");
@@ -289,16 +391,16 @@ public class ReturnsTracker {
 		System.out.println("4. Quit");
 		Helper.line(80, "-");
 	}
-	
-	//--manage customer menu--//
+
+	// --manage customer menu--//
 	public static void manageCusMenu() {
 		ReturnsTracker.setHeader("Manage Customer Menu");
 		System.out.println("1. Add Customer");
 		System.out.println("2. View Customer");
 		System.out.println("3. Delete Customer");
-		System.out.println("5. Quit");
+		System.out.println("4. Quit");
 	}
-	//--//
+	// --//
 
 	public static void setHeader(String header) {
 		Helper.line(80, "-");

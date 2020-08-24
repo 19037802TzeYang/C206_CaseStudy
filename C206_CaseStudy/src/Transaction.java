@@ -5,6 +5,7 @@ public class Transaction {
 	private String status;
 	private String action;
 	private Staff staffInfo;
+	private Product productInfo;
 
 	/**
 	 * @param transactionId
@@ -13,13 +14,28 @@ public class Transaction {
 	 * @param action
 	 * @param staffInfo
 	 */
-	public Transaction(String transactionId, Customer customerInfo, String action, Staff staffInfo) {
+	public Transaction(String transactionId, Customer customerInfo, String action, Staff staffInfo, Product productInfo) {
 		super();
 		this.transactionId = transactionId;
 		this.customerInfo = customerInfo;
 		this.action = action;
 		this.status = "Pending";
 		this.staffInfo = staffInfo;
+		this.productInfo = productInfo;
+	}
+
+	/**
+	 * @return the productInfo
+	 */
+	public Product getProductInfo() {
+		return productInfo;
+	}
+
+	/**
+	 * @param productInfo the productInfo to set
+	 */
+	public void setProductInfo(Product productInfo) {
+		this.productInfo = productInfo;
 	}
 
 	/**
@@ -93,8 +109,8 @@ public class Transaction {
 	}
 
 	public String returnString() {
-		String output = String.format("%-5s %-10s %-10s %-10s %-10s\n", transactionId, customerInfo.getName(),
-				staffInfo.getName(), action, status);
+		String output = String.format("%-5s %-10s %-10s %-20s %-10s %-10s\n", transactionId, customerInfo.getName(),
+				staffInfo.getName(), productInfo.getName(), action, status);
 		return output;
 	}
 
