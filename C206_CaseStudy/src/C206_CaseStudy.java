@@ -69,6 +69,7 @@ public class C206_CaseStudy {
 					} else if (inputoption == 3) {
 						
 						C206_CaseStudy.deleteALLProducts(beverageList, "beverage");
+//---------------------------------Sprint 2-----------------------------------------
 					} else if (inputoption == 4) {
 
 						C206_CaseStudy.viewAllCategory(beverageList, "beverage");
@@ -108,6 +109,7 @@ public class C206_CaseStudy {
 		System.out.println("1. Add a new clothing");
 		System.out.println("2. View all clothings");
 		System.out.println("3. Delete existing clothing");
+		//Sprint 2
 		System.out.println("4. Update existing clothing");
 		Helper.line(80, "-");
 
@@ -118,6 +120,7 @@ public class C206_CaseStudy {
 		System.out.println("1. Add a new beverage"); 
 		System.out.println("2. View all beverage");
 		System.out.println("3. Delete existing beverage");
+		//Sprint 2
 		System.out.println("4. Update existing beverage");
 		Helper.line(80, "-");
 
@@ -166,6 +169,7 @@ public class C206_CaseStudy {
 		String name = Helper.readString("Enter product name > ");
 		Double price = Helper.readDouble("Enter product price > ");
 		String venName = Helper.readString("Enter vendorName> ");
+		//Sprint 2
 		Boolean returnPro = Helper.readBoolean("Enter returnable product> ");
 		
 		Product cc = new Product(ID, name, price, venName, category, returnPro);
@@ -204,7 +208,8 @@ public class C206_CaseStudy {
 	    }
 	
 	//=================================Update Product Category=================================
-	// --update product return policy--//
+	
+	//---------------------------------Sprint 2-----------------------------------------
 		public static void updateReturnHistory(ArrayList<Product> productList, String category) {
 			 C206_CaseStudy.viewAllCategory(productList, category);
 		        String id = Helper.readString("Enter product ID to be updated > ");
