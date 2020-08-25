@@ -8,15 +8,16 @@ public class Outlet {
 	private ArrayList<Staff> staffList;
 	private ArrayList<Transaction> transactionList;
 	private ArrayList<Transaction> archiveList;
-	
+	private ArrayList<Product> productList;
 
-	public Outlet(int outletId, String outletName, String address, ArrayList<Staff> staffList, ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList) {
+	public Outlet(int outletId, String outletName, String address, ArrayList<Staff> staffList, ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList, ArrayList<Product> productList) {
 		this.outletId = outletId;
 		this.outletName = outletName;
 		this.address = address;
 		this.staffList = staffList;
 		this.transactionList = transactionList;
 		this.archiveList = archiveList;
+		this.productList = productList;
 	}
 	
 	public Outlet(int outletId, String outletName, String address, ArrayList<Staff> staffList, ArrayList<Transaction> transactionList) {
@@ -26,6 +27,21 @@ public class Outlet {
 		this.staffList = staffList;
 		this.transactionList = transactionList;
 		this.archiveList = new ArrayList<Transaction>();
+		this.productList = new ArrayList<Product>();
+	}
+	
+	/**
+	 * @return the productList
+	 */
+	public ArrayList<Product> getProductList() {
+		return productList;
+	}
+
+	/**
+	 * @param productList the productList to set
+	 */
+	public void setProductList(ArrayList<Product> productList) {
+		this.productList = productList;
 	}
 	
 	/**

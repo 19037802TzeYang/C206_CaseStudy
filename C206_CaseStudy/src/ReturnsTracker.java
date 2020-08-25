@@ -19,7 +19,6 @@ public class ReturnsTracker {
 		Customer c2 = new Customer("test2", "testuser2", "pass");
 		customerList.add(c1);
 		customerList.add(c2);
-		productList.add(new Product("111", "Pan", 20, "PanMaster", ""));
 
 		// Outlet initialize
 		ArrayList<Staff> staffList = new ArrayList<Staff>();
@@ -29,14 +28,16 @@ public class ReturnsTracker {
 		staffList.add(s1);
 		staffList.add(s2);
 
-		Product p1 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing");
-		Product p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage");
+		Product p1 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston", "Clothing", false);
+		Product p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", true);
 		productList.add(p1);
+		productList.add(p2);
 
 		transactionList.add(new Transaction("1000", c1, "Top Up", s1, p1));
 		transactionList.add(new Transaction("2000", c2, "Refund", s2, p2));
 
-		Outlet outlet1 = new Outlet(1, "North Outlet", "North Avenue 9", staffList, transactionList);
+		Outlet outlet1 = new Outlet(1, "North Outlet", "North Avenue 9", staffList, transactionList, archiveList,
+				productList);
 
 		outletList.add(outlet1);
 
@@ -49,6 +50,7 @@ public class ReturnsTracker {
 				// Customers
 				Customer user = customerLogin(customerList);
 
+				// Login Success
 				if (user != null) {
 					System.out.println("Login success!");
 
@@ -63,14 +65,40 @@ public class ReturnsTracker {
 						customerOption = Helper.readInt("Enter option: ");
 
 						if (customerOption == 1) {
-							transactionMenu(transactionList, user, staffList);
+							// Choose outlet to return product to
+							viewOutlet(outletList);
+
+							Outlet retailOutlet = null;
+							System.out.println("Choose Outlet");
+							int outletId = Helper.readInt("Enter outlet ID > ");
+
+							for (Outlet o : outletList) {
+								if (outletId == o.getOutletId()) {
+									retailOutlet = o;
+									break;
+								}
+							}
+
+							if (retailOutlet != null) {
+								ArrayList<Transaction> outletTransactionList = retailOutlet.getTransactionList();
+								ArrayList<Staff> outletStaffList = retailOutlet.getStaffList();
+								ArrayList<Product> outletProductList = retailOutlet.getProductList();
+
+								transactionMenu(outletTransactionList, user, outletStaffList, outletProductList);
+							} else {
+								System.out.println("Outlet not found");
+							}
 
 						} else if (customerOption == 2) {
 							ArrayList<Transaction> userList = new ArrayList<Transaction>();
 
-							for (Transaction t : transactionList) {
-								if (t.getCustomerInfo().getUsername().equals(user.getUsername())) {
-									userList.add(t);
+							for (Outlet o : outletList) {
+								ArrayList<Transaction> outletTransactionList = o.getTransactionList();
+
+								for (Transaction t : outletTransactionList) {
+									if (t.getCustomerInfo().getUsername().equalsIgnoreCase(user.getUsername())) {
+										userList.add(t);
+									}
 								}
 							}
 
@@ -104,6 +132,7 @@ public class ReturnsTracker {
 				if (retailOutlet != null) {
 					ArrayList<Transaction> outletTransactionList = retailOutlet.getTransactionList();
 					ArrayList<Staff> outletStaffList = retailOutlet.getStaffList();
+					ArrayList<Product> outletProductList = retailOutlet.getProductList();
 
 					int retailOption = 0;
 
@@ -112,7 +141,7 @@ public class ReturnsTracker {
 						System.out.println("1. Manage transactions");
 						System.out.println("2. Manage products");
 						System.out.println("3. Manage staff");
-						System.out.println("6. Quit");
+						System.out.println("4. Quit");
 						retailOption = Helper.readInt("Enter option: ");
 
 						// Transactions Menu
@@ -152,10 +181,70 @@ public class ReturnsTracker {
 
 							// Product menu
 						} else if (retailOption == 2) {
-														
 
+							int productOption = -1;
+							int inputOption = -1;
+
+							while (productOption != 3) {
+								setHeader("PRODUCTS MENU");
+								System.out.println("Select Product Category");
+								System.out.println("1. Clothing");
+								System.out.println("2. Beverage");
+								System.out.println("3. Quit");
+								Helper.line(80, "-");
+								productOption = Helper.readInt("Enter an option >");
+
+								if (productOption == 1) {
+									// Select Clothing Category
+									Clothingmenu();
+									inputOption = Helper.readInt("Enter an option > ");
+
+									if (inputOption == 1) {
+										Product p = inputProduct("Clothing");
+										addProduct(outletProductList, p);
+
+									} else if (inputOption == 2) {
+										viewAllCategory(outletProductList, "Clothing");
+
+									} else if (inputOption == 3) {
+										deleteALLProducts(outletProductList, "Clothing");
+									}
+
+								} else if (productOption == 2) {
+
+									Beveragemenu();
+									inputOption = Helper.readInt("Enter an option > ");
+
+									if (inputOption == 1) {
+										Product b = inputProduct("Beverage");
+										addProduct(outletProductList, b);
+
+									} else if (inputOption == 2) {
+										viewAllCategory(outletProductList, "Beverage");
+
+									} else if (inputOption == 3) {
+										deleteALLProducts(outletProductList, "Beverage");
+									}
+								} else if (productOption == 3) {
+
+								} else if (productOption == 4) {
+
+								}
+							}
+							// Staff Menu
 						} else if (retailOption == 3) {
-							
+
+							int staffOption = -1;
+
+							while (staffOption != 3) {
+								setHeader("STAFF MENU");
+								System.out.println("1. View staff");
+								if (staffOption == 1) {
+									viewStaff(outletStaffList);
+								} else if (staffOption == 2) {
+
+								}
+							}
 						}
 					}
 
@@ -173,6 +262,7 @@ public class ReturnsTracker {
 					System.out.println("1. Manage customers");
 					System.out.println("2. Manage outlets");
 					System.out.println("3. Misc.");
+					System.out.println("4. Quit");
 					adminOption = Helper.readInt("Enter option > ");
 
 					if (adminOption == 1) {
@@ -204,6 +294,7 @@ public class ReturnsTracker {
 			if (option == 1) {
 				Outlet outlet = inputOutlet();
 				addOutlet(outletList, outlet);
+				outlet.addStaff(new Staff("John", 1));
 			} else if (option == 2) {
 				viewOutlet(outletList);
 			} else if (option == 3) {
@@ -253,31 +344,57 @@ public class ReturnsTracker {
 	}
 
 	// Methods for Transactions
-	public static void transactionMenu(ArrayList<Transaction> transactionList, Customer c, ArrayList<Staff> staffList) {
+	public static void transactionMenu(ArrayList<Transaction> transactionList, Customer c, ArrayList<Staff> staffList,
+			ArrayList<Product> productList) {
 		setHeader("RETURN PRODUCT");
-		System.out.println("1. Refund");
-		System.out.println("2. Exchange");
-		System.out.println("3. Top up");
+		viewAllCategory(productList, "Clothing");
+		viewAllCategory(productList, "Beverage");
 
-		int option = Helper.readInt("Choose option: ");
-		String action = "";
+		String productId = Helper.readString("Enter product ID: ");
 
-		if (option == 1) {
-			action = "Refund";
-		} else if (option == 2) {
-			action = "Exchange";
-		} else {
-			action = "Top up";
+		Product product = null;
+
+		for (Product p : productList) {
+			if (p.getProductId().equalsIgnoreCase(productId)) {
+				product = p;
+				break;
+			}
 		}
 
-		Random rand = new Random();
-		int id = rand.nextInt(5000);
-		int staffIndex = rand.nextInt(staffList.size());
-		Product p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage");
+		if (product != null) {
 
-		Transaction t = new Transaction(Integer.toString(id), c, action, staffList.get(staffIndex), p2);
+			if (product.getreturnProduct() == true) {
 
-		addTransaction(transactionList, t);
+				System.out.println("1. Refund");
+				System.out.println("2. Exchange");
+				System.out.println("3. Top up");
+
+				int option = Helper.readInt("Choose option: ");
+				String action = "";
+
+				if (option == 1) {
+					action = "Refund";
+				} else if (option == 2) {
+					action = "Exchange";
+				} else {
+					action = "Top up";
+				}
+
+				Random rand = new Random();
+				int id = rand.nextInt(5000);
+				int staffIndex = rand.nextInt(staffList.size());
+
+				Transaction t = new Transaction(Integer.toString(id), c, action, staffList.get(staffIndex), product);
+
+				addTransaction(transactionList, t);
+			
+			} else {
+				System.out.println("Product is not returnable");
+			}
+
+		} else {
+			System.out.println("Invalid Product ID");
+		}
 	}
 
 	public static void addTransaction(ArrayList<Transaction> transactionList, Transaction t) {
@@ -338,6 +455,7 @@ public class ReturnsTracker {
 			System.out.println("1. Change return type");
 			System.out.println("2. Change staff");
 			System.out.println("3. Change status");
+			System.out.println("4. Complete transaction");
 			System.out.println("4. EXIT");
 			option = Helper.readInt("Enter option: ");
 
@@ -352,6 +470,17 @@ public class ReturnsTracker {
 			} else if (option == 3) {
 				String status = Helper.readString("Enter new status: ");
 				t.setStatus(status);
+			} else if (option == 4) {
+				Customer c = t.getCustomerInfo();
+				Product p = t.getProductInfo();
+
+				int reward = c.getRewardPoints();
+				double price = p.getPrice();
+				int fin = (int) (reward + (price * 100));
+
+				c.setRewardPoints(fin);
+
+				t.setStatus("Fulfilled");
 			}
 			viewTransactions(viewList);
 		}
@@ -409,8 +538,8 @@ public class ReturnsTracker {
 					} else if (updationOption == 2) {
 						updateProductName(archiveList, no - 1);
 						updated = true;
-					} else if(updationOption == 3) {
-						if(updated == true) {
+					} else if (updationOption == 3) {
+						if (updated == true) {
 							archiveList.get(no - 1).setStatus("Pending");
 							moveToTransactionList(transactionList, archiveList, no - 1);
 						}
@@ -435,13 +564,14 @@ public class ReturnsTracker {
 
 	}
 
-	private static void moveToTransactionList(ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList, int index) {
+	private static void moveToTransactionList(ArrayList<Transaction> transactionList,
+			ArrayList<Transaction> archiveList, int index) {
 		transactionList.add(archiveList.remove(index));
 		System.out.println("Transaction Moved from Archive!\n");
 	}
-	//--//
+	// --//
 
-	//--manage customer (add customer, view customer, delete customer)--//
+	// --manage customer (add customer, view customer, delete customer)--//
 	// return customer object
 	public static Customer inputCustomer() {
 		Helper.line(40, "-");
@@ -559,7 +689,74 @@ public class ReturnsTracker {
 	public static void getMostProducts(ArrayList<Transaction> transactionList) {
 
 		for (Transaction t : transactionList) {
+		
+		}
+	}
 
+	// Product
+
+	// ================================= Option 1 View
+	// Category=================================
+	public static void viewAllCategory(ArrayList<Product> productList, String category) {
+		setHeader(category.toUpperCase() + " LIST");
+
+		// for loop, get .getCategory equals "beverage"
+		String output = String.format("%-10s %-20s %-10s %-20s %-10s %-10s\n", "ID", "Name", "Price", "Vendor",
+				"Category", "Returnable");
+		for (int i = 0; i < productList.size(); i++) {
+			Product p = productList.get(i);
+			if (p.getCategory().equals(category)) {
+				output += String.format("%-10s %-20s %-10.2f %-20s %-10s %-5s\n", p.getProductId(), p.getName(),
+						p.getPrice(), p.getVendorName(), p.getCategory(), p.getreturnProduct());
+			}
+		}
+		System.out.println(output);
+	}
+
+	public static void addProduct(ArrayList<Product> productList, Product product) {
+
+		productList.add(product);
+		System.out.println("product added");
+	}
+
+	public static Product inputProduct(String category) {
+
+		String ID = Helper.readString("Enter product ID > ");
+		String name = Helper.readString("Enter product name > ");
+		Double price = Helper.readDouble("Enter product price > ");
+		String venName = Helper.readString("Enter vendorName> ");
+		// Sprint 2
+		Boolean returnPro = Helper.readBoolean("Enter returnable product> ");
+
+		Product cc = new Product(ID, name, price, venName, category, returnPro);
+		return cc;
+
+	}
+
+	// =================================Delete Product
+	// Category=================================
+	public static boolean deleteProduct(ArrayList<Product> productList, String id) {
+		boolean isDelete = false;
+
+		for (int i = 0; i < productList.size(); i++) {
+			if (id.equalsIgnoreCase(productList.get(i).getProductId())) {
+				productList.remove(i);
+				isDelete = true;
+			}
+		}
+		return isDelete;
+
+	}
+
+	public static void deleteALLProducts(ArrayList<Product> productList, String category) {
+		C206_CaseStudy.viewAllCategory(productList, category);
+		String id = Helper.readString("Enter ID > ");
+		Boolean isDelete = deleteProduct(productList, id);
+
+		if (isDelete == false) {
+			System.out.println("Invalid ID");
+		} else {
+			System.out.println(id + " has been deleted");
 		}
 	}
 
@@ -589,6 +786,25 @@ public class ReturnsTracker {
 		System.out.println("2. View Outlet");
 		System.out.println("3. Delete Outlet");
 		System.out.println("4. Quit");
+	}
+
+	public static void Clothingmenu() {
+		System.out.println("Product section");
+		System.out.println("1. Add a new clothing");
+		System.out.println("2. View all clothings");
+		System.out.println("3. Delete existing clothing");
+		System.out.println("4. Quit");
+		Helper.line(80, "-");
+	}
+
+	public static void Beveragemenu() {
+		System.out.println("Beverage section");
+		System.out.println("1. Add a new beverage");
+		System.out.println("2. View all beverage");
+		System.out.println("3. Delete existing beverage");
+		System.out.println("4. Quit");
+		Helper.line(80, "-");
+
 	}
 
 	public static void setHeader(String header) {
