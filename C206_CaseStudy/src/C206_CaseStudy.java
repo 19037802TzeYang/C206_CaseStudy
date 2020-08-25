@@ -149,7 +149,7 @@ public class C206_CaseStudy {
 <<<<<<< HEAD
 	//==========Option 1 ==============
 	public static void viewOutlet() {
-		//display all bikes in the list
+		//display  in the list
 		for (int i = 1; i < outletList.size(); i++) {
 			System.out.println(String.format("%-5d, %-5s", i+1, outletList.get(i).getOutletId()));
 		}
@@ -170,7 +170,7 @@ public class C206_CaseStudy {
 	}
 	
 	public static void addOutlet(Outlet outlet) {
-		//add bike to list
+		//add outlet to list
 		outletList.add(outlet);
 	}
 	
