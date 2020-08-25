@@ -15,10 +15,6 @@ public class ReturnsTracker {
 		ArrayList<Product> productList = new ArrayList<Product>();
 		ArrayList<Customer> customerList = new ArrayList<Customer>();
 
-		Customer c1 = new Customer("test", "testuser", "pass");
-		Customer c2 = new Customer("test2", "testuser2", "pass");
-		customerList.add(c1);
-		customerList.add(c2);
 
 		// Outlet initialize
 		ArrayList<Staff> staffList = new ArrayList<Staff>();
@@ -32,6 +28,11 @@ public class ReturnsTracker {
 		Product p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", true);
 		productList.add(p1);
 		productList.add(p2);
+		
+		Customer c1 = new Customer("test", "testuser", "pass", "", p1);
+		Customer c2 = new Customer("test2", "testuser2", "pass", "", p2);
+		customerList.add(c1);
+		customerList.add(c2);
 
 		transactionList.add(new Transaction("1000", c1, "Top Up", s1, p1));
 		transactionList.add(new Transaction("2000", c2, "Refund", s2, p2));
@@ -148,7 +149,7 @@ public class ReturnsTracker {
 						if (retailOption == 1) {
 
 							int transactionOption = 0;
-							while (transactionOption != 6) {
+							while (transactionOption != 5) {
 								ReturnsTracker.setHeader("TRANSACTIONS MENU");
 								System.out.println("1. View transactions");
 								System.out.println("2. Archive transactions");
@@ -168,10 +169,6 @@ public class ReturnsTracker {
 									viewTransactions(archiveList);
 
 								} else if (transactionOption == 4) {
-									// --update customer return(policy) history--//
-									updateReturnHistory(outletTransactionList, archiveList);
-									// --//
-								} else if (transactionOption == 5) {
 									viewTransactions(outletTransactionList);
 
 									int choice = Helper.readInt("Select transaction to update: ");
@@ -253,8 +250,6 @@ public class ReturnsTracker {
 				}
 
 			} else if (option == 3) {
-				// Administrator
-				// --Manage Customer (add customer, view customer, delete customer)--//
 				int adminOption = 0;
 				while (adminOption != 4) {
 
@@ -272,7 +267,6 @@ public class ReturnsTracker {
 					}
 
 				}
-				// --//
 			}
 
 			menu();
@@ -307,8 +301,9 @@ public class ReturnsTracker {
 	 * @param customerList
 	 */
 	private static void manageCustomers(ArrayList<Customer> customerList) {
+		//19037802tzeyang--Manage Customer (add customer, view customer, delete customer)--//
 		int option = -1;
-
+		
 		while (option != 4) {
 			manageCusMenu();
 			option = Helper.readInt("Enter option > ");
@@ -321,9 +316,14 @@ public class ReturnsTracker {
 			} else if (option == DELETECUS) {
 				deleteCustomer(customerList);
 			} else if (option == 4) {
+				// --update customer return history--//
+				updateReturnHistory(customerList);
+				// --//
+			} else if (option == 5) {
 				System.out.println("GoodBye");
 			}
 		}
+		//19037802tzeyang--//
 	}
 
 	// Customer login
@@ -387,7 +387,7 @@ public class ReturnsTracker {
 				Transaction t = new Transaction(Integer.toString(id), c, action, staffList.get(staffIndex), product);
 
 				addTransaction(transactionList, t);
-			
+
 			} else {
 				System.out.println("Product is not returnable");
 			}
@@ -503,21 +503,19 @@ public class ReturnsTracker {
 		System.out.println(output);
 	}
 
-	// public static void
-
-	// --update customer return(policy) history--//
-	public static void updateReturnHistory(ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList) {
+	//19037802tzeyang--update customer return history--//
+	public static void updateReturnHistory(ArrayList<Customer> customerList) {
 
 		int no = 0;
 		do {
 			setHeader("UPDATE RETURN HISTORY");
-			viewTransactions(archiveList);
+			viewCustomer(customerList);
 			// take input from available transactions if input is -1 loop will stop
 			no = Helper.readInt("Enter No to update or -1 to cancel > ");
 			// if no is -1 exit from loop
 			if (no == -1) {
 				break;
-			} else if (no < 1 || no > archiveList.size()) {
+			} else if (no < 1 || no > customerList.size()) {
 				System.out.println("Invalid!");
 			} else {
 				// if transaction no is valid take updated values
@@ -533,15 +531,14 @@ public class ReturnsTracker {
 					updationOption = Helper.readInt("Choose Option > ");
 
 					if (updationOption == 1) {
-						updatePolicy(archiveList, no - 1);
+						updatePolicy(customerList, no - 1);
 						updated = true;
 					} else if (updationOption == 2) {
-						updateProductName(archiveList, no - 1);
+						updateProductName(customerList, no - 1);
 						updated = true;
 					} else if (updationOption == 3) {
 						if (updated == true) {
-							archiveList.get(no - 1).setStatus("Pending");
-							moveToTransactionList(transactionList, archiveList, no - 1);
+							System.out.println("Customer return records updated");
 						}
 					}
 				}
@@ -549,38 +546,34 @@ public class ReturnsTracker {
 		} while (no != -1);
 	}
 
-	private static void updateProductName(ArrayList<Transaction> archiveList, int index) {
+	private static void updateProductName(ArrayList<Customer> customerList, int index) {
 		String productName = Helper.readString("Enter Product name to update > ");
-		archiveList.get(index).getProductInfo().setName(productName);
-		System.out.println("Transaction updated!\n");
+		customerList.get(index).getProductInfo().setName(productName);
+		System.out.println("Product updated!\n");
 
 	}
 
-	private static void updatePolicy(ArrayList<Transaction> archiveList, int index) {
+	private static void updatePolicy(ArrayList<Customer> customerList, int index) {
 		String action = Helper.readString("Enter policy to update > ");
 		// set the policy in particular archive list
-		archiveList.get(index).setAction(action);
-		System.out.println("Transaction updated!\n");
+		customerList.get(index).setAction(action);
+		System.out.println("Return Policy updated!\n");
 
 	}
+	//19037802tzeyang--//
 
-	private static void moveToTransactionList(ArrayList<Transaction> transactionList,
-			ArrayList<Transaction> archiveList, int index) {
-		transactionList.add(archiveList.remove(index));
-		System.out.println("Transaction Moved from Archive!\n");
-	}
-	// --//
-
-	// --manage customer (add customer, view customer, delete customer)--//
+	//19037802tzeyang--manage customer (add customer, view customer, delete customer)--//
 	// return customer object
 	public static Customer inputCustomer() {
-		Helper.line(40, "-");
+		Helper.line(80, "-");
 		System.out.println("ADD NEW CUSTOMER");
 		String name = Helper.readString("Enter Name > ");
 		String userName = Helper.readString("Enter User Name > ");
 		String password = Helper.readString("Enter Password No > ");
-
-		Customer cObj = new Customer(name, userName, password);
+		String action = Helper.readString("Enter return policy > ");
+		String productName = Helper.readString("Enter product > ");
+		Product p = new Product(null, productName, 0, null, null, false);
+		Customer cObj = new Customer(name, userName, password, action, p);
 		return cObj;
 	}
 
@@ -592,16 +585,18 @@ public class ReturnsTracker {
 	// return customer string
 	public static String retriveAllCustomer(ArrayList<Customer> customerList) {
 		String output = "";
-		for (Customer c : customerList) {
-			output += String.format("%-10s %-10s %-16s %s\n", c.getName(), c.getUsername(), c.getPassword(),
-					c.getRewardPoints());
+
+		for (int i = 0; i < customerList.size(); i++) {
+			Customer c = customerList.get(i);
+			output += String.format("%-7s %-60s", i + 1, c.returnString());
 		}
 		return output;
 	}
 
 	public static void viewCustomer(ArrayList<Customer> customerList) {
-		Helper.line(50, "-");
-		String output = String.format("%-10s %-10s %-16s %s\n", "NAME", "USERNAME", "PASSWORD", "REWARD POINTS");
+		Helper.line(80, "-");
+		String output = String.format("%-7s %-8s %-12s %-14s %-16s %-10s %s\n", "NO", "NAME", "USERNAME", "PASSWORD",
+				"REWARD POINTS", "ACTION", "PRODUCT");
 		output += retriveAllCustomer(customerList);
 		System.out.println(output);
 	}
@@ -628,7 +623,7 @@ public class ReturnsTracker {
 			System.out.println("Username not found!");
 		}
 	}
-	// --//
+	//19037802tzeyang--//
 
 	public static Outlet inputOutlet() {
 		Helper.line(40, "-");
@@ -689,7 +684,7 @@ public class ReturnsTracker {
 	public static void getMostProducts(ArrayList<Transaction> transactionList) {
 
 		for (Transaction t : transactionList) {
-		
+
 		}
 	}
 
@@ -770,15 +765,16 @@ public class ReturnsTracker {
 		Helper.line(80, "-");
 	}
 
-	// --manage customer menu--//
+	//19037802tzeyang--manage customer menu--//
 	public static void manageCusMenu() {
 		ReturnsTracker.setHeader("Manage Customer Menu");
 		System.out.println("1. Add Customer");
 		System.out.println("2. View Customer");
 		System.out.println("3. Delete Customer");
-		System.out.println("4. Quit");
+		System.out.println("4. Update Customer Return History");
+		System.out.println("5. Quit");
 	}
-	// --//
+	//19037802tzeyang--//
 
 	public static void manageOutletMenu() {
 		ReturnsTracker.setHeader("Manage Outlet Menu");

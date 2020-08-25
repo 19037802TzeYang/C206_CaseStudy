@@ -34,15 +34,15 @@ public class ReturnsTrackerTest {
 	@Before
 	public void setUp() throws Exception {
 		// prepare test data
-		c1 = new Customer("Bob", "Bob1", "pass");
-		c2 = new Customer("Peter", "Peter1", "pass");
+		c1 = new Customer("Bob", "Bob1", "pass", "", p1);
+		c2 = new Customer("Peter", "Peter1", "pass", "", p2);
 		s1 = new Staff("John", 100);
 		s2 = new Staff("Donald", 200);
 
-		p1 = new Product("01", "Water", 2.50, "vendor", "");
-		p2 = new Product("01", "Water", 2.50, "vendor", "");
-		p3 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing");
-		p4 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage");
+		p1 = new Product("01", "Water", 2.50, "vendor", "", false);
+		p2 = new Product("01", "Water", 2.50, "vendor", "", false);
+		p3 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing", false);
+		p4 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", false);
 		
 		t1 = new Transaction("1111", c1, "Top up", s1, p1);
 		t2 = new Transaction("2222", c2, "Exchange", s2, p2);
@@ -114,24 +114,6 @@ public class ReturnsTrackerTest {
 
 		assertSame("Test that transaction is added same as 1st archived list?", t1, archiveList.get(0));
 	}
-	
-	//--update customer return(policy) history test--//
-	@Test
-	public void updateReturnHistoryTest() {
-		// Test if transaction list is not null, so that the transaction can be added
-		assertNotNull("Test if there is valid transaction arraylist to add to", transactionList);
-		// Test if the archieve list is not null, so that the transaction can be updated
-		assertNotNull("Test if there is valid transaction arraylist to add to", archiveList);
-		// Given an empty list, after adding 1 Transaction, the size of the list is 1
-		ReturnsTracker.addTransaction(transactionList, t1);
-		// Archive transaction, archiveList size = 1, transactionList size = 0
-		ReturnsTracker.archiveTransaction(transactionList, archiveList, 0);
-		// Given that archieveList size = 1, after update 1 transaction, transactionList size = 1, archieveList size = 0
-		ReturnsTracker.updateReturnHistory(transactionList, archiveList);
-		assertEquals("Test that transaction arraylist size is 1?", 1, transactionList.size());
-		assertEquals("Test that transaction arraylist size is 0?", 0, archiveList.size());
-	}
-	//--// 
 
 	@After
 	public void tearDown() throws Exception {
