@@ -24,6 +24,7 @@ public class ReturnsTrackerTest {
 	private Transaction t1;
 	private Transaction t2;
 	private Transaction t3;
+	private Transaction t4;
 
 	ArrayList<Outlet> outletList = new ArrayList<Outlet>();
 	ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
@@ -43,7 +44,6 @@ public class ReturnsTrackerTest {
 		c2 = new Customer("Peter", "Peter1", "pass", "", p2);
 		s1 = new Staff("John", 100);
 		s2 = new Staff("Donald", 200);
-<<<<<<< HEAD
 
 		p1 = new Product("01", "Water", 2.50, "vendor", "", true);
 		p2 = new Product("02", "Tea", 2.50, "vendor", "", true);
@@ -51,17 +51,15 @@ public class ReturnsTrackerTest {
 		p4 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", false);
 
 		t1 = new Transaction("1111", c1, "Top up", s1, p4);
-=======
-
 		p1 = new Product("01", "Water", 2.50, "vendor", "", false);
 		p2 = new Product("01", "Water", 2.50, "vendor", "", false);
 		p3 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing", false);
 		p4 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", false);
 		
 		t1 = new Transaction("1111", c1, "Top up", s1, p1);
->>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy.git
 		t2 = new Transaction("2222", c2, "Exchange", s2, p2);
 		t3 = new Transaction("3333", c1, "Refund", s2, p4);
+		t4 = new Transaction("4444", c1, "Exchange", s2, p4);
 
 		staffList.add(s1);
 		staffList.add(s2);
@@ -135,7 +133,6 @@ public class ReturnsTrackerTest {
 
 		assertSame("Test that transaction is added same as 1st archived list?", t1, archiveList.get(0));
 	}
-<<<<<<< HEAD
 
 	@Test
 	public void getMostReturnsTest() {
@@ -143,12 +140,12 @@ public class ReturnsTrackerTest {
 		assertNotNull("Test if there is valid transaction arraylist to add to", transactionList);
 
 		// Given an empty list, after adding 1 Transaction, the size of the list is 1
-		ReturnsTracker.addTransaction(transactionList, t1);
+		ReturnsTracker.addTransaction(transactionList, t2);
 		assertEquals("Test if that transaction arraylist size is 1?", 1, transactionList.size());
 
 		// Add two more Transaction. test The size of the list is 3
-		ReturnsTracker.addTransaction(transactionList, t2);
 		ReturnsTracker.addTransaction(transactionList, t3);
+		ReturnsTracker.addTransaction(transactionList, t4);
 		assertEquals("Test that transaction arraylist size is 3?", 3, transactionList.size());
 
 		// Test if product with most return is Beer
@@ -160,8 +157,6 @@ public class ReturnsTrackerTest {
 		String testOutput2 = "Customer with most returns: Bob1 (2)";
 		assertEquals("Test if product matches testOutput", ReturnsTracker.getMostReturns(transactionList, 2),
 				(testOutput2));
-
-		System.out.println(ReturnsTracker.getMostReturns(transactionList, 2));
 	}
 
 	@Test
@@ -202,8 +197,6 @@ public class ReturnsTrackerTest {
 		assertEquals("Test that transaction arraylist size is 0?", 0, archiveList.size());
 	}
 	// --//
-=======
->>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy.git
 
 	@After
 	public void tearDown() throws Exception {
