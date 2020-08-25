@@ -300,7 +300,7 @@ public class C206_CaseStudy {
 	
 	}
 
-//--------------------------------SPRINT 2	-----------------------------------//
+//--------------------------------SPRINT 2-----------------------------------//
 public static void updateReturnHistory(ArrayList<Staff> staffList, String Outlet) {
 	 C206_CaseStudy.viewAllOutlets(staffList, Outlet);
        String id = Helper.readString("Enter staff ID to be updated > ");
