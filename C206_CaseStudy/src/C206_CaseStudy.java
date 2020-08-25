@@ -6,8 +6,8 @@ public class C206_CaseStudy {
 		// TODO Auto-generated method stub
 			ArrayList<Product> productList = new ArrayList<Product>();
 			ArrayList<Product> beverageList = new ArrayList<Product>();
-			productList.add(new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "clothing"));
-			beverageList.add(new Product("ID13131313", "Wine", 100.0, "dqdqwd", "beverage"));
+			productList.add(new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "clothing", true));
+			beverageList.add(new Product("ID1", "Wine", 100.0, "dqdqwd", "beverage", false));
 			
 			int option = -1;
 			int inputoption = -1;
@@ -31,6 +31,25 @@ public class C206_CaseStudy {
 						
 					} else if (inputoption == 3) {
 						C206_CaseStudy.deleteALLProducts(productList, "clothing");
+					
+					} else if (inputoption == 4) {
+
+						C206_CaseStudy.viewAllCategory(productList, "clothing");
+						String updateproduct = Helper.readString("Enter product id > ");
+						Product pro = null;
+						
+						for (Product p : productList) {
+							if (updateproduct.equals(p.getProductId())) {
+								pro = p;
+								break;
+							}
+						}
+						
+						if (pro != null) {
+							updateProduct(pro);
+						} else {
+							System.out.println("cant find");
+						}
 					}
 					
 					
@@ -49,7 +68,25 @@ public class C206_CaseStudy {
 						
 					} else if (inputoption == 3) {
 						
-						C206_CaseStudy.deleteALLProducts(productList, "beverage");
+						C206_CaseStudy.deleteALLProducts(beverageList, "beverage");
+					} else if (inputoption == 4) {
+
+						C206_CaseStudy.viewAllCategory(beverageList, "beverage");
+						String updateproduct = Helper.readString("Enter product id > ");
+						Product pro = null;
+						
+						for (Product p : beverageList) {
+							if (updateproduct.equals(p.getProductId())) {
+								pro = p;
+								break;
+							}
+						}
+						
+						if (pro != null) {
+							updateProduct(pro);
+						} else {
+							System.out.println("cant find");
+						}
 					}
 
 				}
@@ -71,6 +108,7 @@ public class C206_CaseStudy {
 		System.out.println("1. Add a new clothing");
 		System.out.println("2. View all clothings");
 		System.out.println("3. Delete existing clothing");
+		System.out.println("4. Update existing clothing");
 		Helper.line(80, "-");
 
 	}
@@ -80,6 +118,7 @@ public class C206_CaseStudy {
 		System.out.println("1. Add a new beverage"); 
 		System.out.println("2. View all beverage");
 		System.out.println("3. Delete existing beverage");
+		System.out.println("4. Update existing beverage");
 		Helper.line(80, "-");
 
 	}
@@ -89,7 +128,7 @@ public class C206_CaseStudy {
 		return null;
 	}
 	
-	//================================= Option 1 View Category=================================
+	//================================= View Category=================================
 	public static void viewAllCategory(ArrayList<Product> productList, String category) {
 		C206_CaseStudy.setHeader("List of category");
 		System.out.println(productList);
@@ -99,10 +138,10 @@ public class C206_CaseStudy {
 		for (int i = 0; i < productList.size(); i++) {
 			Product p = productList.get(i);
 			if (p.getCategory().equals(category)) {
-				output += String.format("Product ID: %10s \n Product Name: %10s \n Product Price: %-10f \n "
-						+ "Vendor Name: %-10s \n Category: %10s\n \n \n", productList.get(i).getProductId(),
+				output += String.format("Product ID: %-10s \n Product Name: %10s \n Product Price: %-10f \n "
+						+ "Vendor Name: %-10s \n Category: %-10s\n Returnable Product: %-10b \n \n", productList.get(i).getProductId(),
 					productList.get(i).getName(), productList.get(i).getPrice(), productList.get(i).getVendorName(),
-					productList.get(i).getCategory());
+					productList.get(i).getCategory(), productList.get(i).getreturnProduct());
 			}
 		}
 		System.out.println(output);
@@ -114,7 +153,7 @@ public class C206_CaseStudy {
 		
 	}
 	
-	
+	//================================= Add Product Category=================================
 	public static void addProduct(ArrayList<Product> productList, Product product) {
 		
 		productList.add(product);
@@ -127,14 +166,14 @@ public class C206_CaseStudy {
 		String name = Helper.readString("Enter product name > ");
 		Double price = Helper.readDouble("Enter product price > ");
 		String venName = Helper.readString("Enter vendorName> ");
-
+		Boolean returnPro = Helper.readBoolean("Enter returnable product> ");
 		
-		Product cc = new Product(ID, name, price, venName, category);
+		Product cc = new Product(ID, name, price, venName, category, returnPro);
 		return cc;
 		
 	}
 	
-    
+	//=================================Delete Product Category=================================
 	public static boolean deleteProduct(ArrayList<Product> productList, String id) {
 	        boolean isDelete = false;
 
@@ -164,4 +203,53 @@ public class C206_CaseStudy {
 	        }
 	    }
 	
-	}
+	//=================================Update Product Category=================================
+	// --update product return policy--//
+		public static void updateReturnHistory(ArrayList<Product> productList, String category) {
+			 C206_CaseStudy.viewAllCategory(productList, category);
+		        String id = Helper.readString("Enter product ID to be updated > ");
+		        Boolean isUpdate = deleteProduct(productList, id);
+
+		        
+		        if (isUpdate == false) {
+		            System.out.println("Invalid update");
+		        } else {
+		            System.out.println(id + " has been updated");
+		        }
+		    }
+		
+		public static void updateProduct(Product product) {
+			
+			System.out.println("UPDATE PRODUCT");
+			System.out.println("1. Change ID"); 
+			System.out.println("2. Change name");
+			System.out.println("3. Change price");
+			System.out.println("4. Change vendor name");
+			System.out.println("5. Change returnable product");
+			Helper.line(80, "-");
+			
+			int option = Helper.readInt("Enter option > ");
+			
+			if (option == 1) {
+				String ID = Helper.readString("Enter new product ID > ");
+				product.setProductId(ID);
+			} else if (option == 2) {
+			String name = Helper.readString("Enter new product name > ");
+			product.setName(name);
+			} else if (option ==3) {
+			Double price = Helper.readDouble("Enter new product price > ");
+			product.setPrice(price);
+			} else if (option == 4) {
+				String venName = Helper.readString("Enter new vendorName> ");
+				product.setVendorName(venName);	
+			} else if (option == 5) {
+				Boolean returnProd = Helper.readBoolean("Enter new returnable product> ");
+				product.setreturnProduct(returnProd);	
+			}
+			ArrayList<Product> productList = new ArrayList<Product>();
+			productList.add(product);
+			
+			C206_CaseStudy.viewAllCategory(productList, product.getCategory());
+			
+		}
+}

@@ -2,19 +2,21 @@ public class Product {
 	private String productId;
 	private String name;
 	private String category;
+	private Boolean returnProduct;
 	/**
 	 * @param productId
 	 * @param name
 	 * @param price
 	 * @param vendorName
 	 */
-	public Product(String productId, String name, double price, String vendorName, String category) {
+	public Product(String productId, String name, double price, String vendorName, String category, Boolean returnProduct) {
 		super();
 		this.productId = productId;
 		this.name = name;
 		this.price = price;
 		this.vendorName = vendorName;
 		this.category = category;
+		this.returnProduct = returnProduct;
 	}
 	
 	/**
@@ -24,6 +26,13 @@ public class Product {
 		return productId;
 	}
 	
+	public Boolean getreturnProduct() {
+		return returnProduct;
+	}
+	
+	public Boolean setreturnProduct(Boolean returnProduct) {
+		return returnProduct;
+	}
 	
 	/**
 	 * @param productId the productId to set
@@ -91,6 +100,20 @@ public class Product {
 	private double price;
 	private String vendorName;
 	private String conditions;
+	public void setAction(String action) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setStatus(String status) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object getStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	
 }
