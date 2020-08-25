@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class ReturnsTracker {
@@ -136,12 +139,13 @@ public class ReturnsTracker {
 
 					int retailOption = 0;
 
-					while (retailOption != 4) {
+					while (retailOption != 5) {
 						ReturnsTracker.setHeader("RETAILER MENU");
 						System.out.println("1. Manage transactions");
 						System.out.println("2. Manage products");
 						System.out.println("3. Manage staff");
-						System.out.println("4. Quit");
+						System.out.println("4. Misc.");
+						System.out.println("5. Quit");
 						retailOption = Helper.readInt("Enter option: ");
 
 						// Transactions Menu
@@ -245,6 +249,24 @@ public class ReturnsTracker {
 
 								}
 							}
+						} else if (retailOption == 4) {
+
+							System.out.println("");
+							int miscOption = 0;
+
+							while (miscOption != 3) {
+								setHeader("MISCELLANEOUS MENU");
+								System.out.println("1. Product with most returns");
+								System.out.println("2. Customer with most returns");
+								System.out.println("3. Quit");
+								miscOption = Helper.readInt("Enter option : ");
+								if (miscOption == 1) {
+									System.out.println(getMostReturns(outletTransactionList, 1));
+								} else if (miscOption == 2) {
+									System.out.println(getMostReturns(outletTransactionList, 2));
+								}
+							}
+
 						}
 					}
 
@@ -387,7 +409,7 @@ public class ReturnsTracker {
 				Transaction t = new Transaction(Integer.toString(id), c, action, staffList.get(staffIndex), product);
 
 				addTransaction(transactionList, t);
-			
+
 			} else {
 				System.out.println("Product is not returnable");
 			}
@@ -451,12 +473,12 @@ public class ReturnsTracker {
 
 		int option = -1;
 
-		while (option != 4) {
+		while (option != 5) {
 			System.out.println("1. Change return type");
 			System.out.println("2. Change staff");
 			System.out.println("3. Change status");
 			System.out.println("4. Complete transaction");
-			System.out.println("4. EXIT");
+			System.out.println("5. Exit");
 			option = Helper.readInt("Enter option: ");
 
 			if (option == 1) {
@@ -686,11 +708,44 @@ public class ReturnsTracker {
 		}
 	}
 
-	public static void getMostProducts(ArrayList<Transaction> transactionList) {
+	public static String getMostReturns(ArrayList<Transaction> transactionList, int option) {
+		String result = "";
+		// option 1 = product, option 2 = customer
+		if (transactionList.size() != 0) {
+			Map<String, Integer> hm = new HashMap<String, Integer>();
 
-		for (Transaction t : transactionList) {
-		
+			for (int i = 0; i < transactionList.size(); i++) {
+				String name;
+				if (option == 1) {
+					name = transactionList.get(i).getProductInfo().getName();
+					result = "Product with most returns: ";
+				} else {
+					name = transactionList.get(i).getCustomerInfo().getUsername();
+					result = "Customer with most returns: ";
+				}
+
+				if (hm.containsKey(name)) {
+					hm.put(name, hm.get(name) + 1);
+				} else {
+					hm.put(name, 1);
+				}
+			}
+
+			Entry<String, Integer> max = null;
+
+			for (Entry<String, Integer> p : hm.entrySet()) {
+				if (max == null || p.getValue() > max.getValue()) {
+					max = p;
+				}
+			}
+
+			return (result + max.getKey() + " (" + max.getValue() + ")");
+
+		} else {
+			result = "No transactions stored";
+			return result;
 		}
+
 	}
 
 	// Product
