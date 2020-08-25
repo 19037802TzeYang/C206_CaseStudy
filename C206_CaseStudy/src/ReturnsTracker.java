@@ -36,7 +36,7 @@ public class ReturnsTracker {
 		transactionList.add(new Transaction("1000", c1, "Top Up", s1, p1));
 		transactionList.add(new Transaction("2000", c2, "Refund", s2, p2));
 
-		Outlet outlet1 = new Outlet(0, "North Avenue 9", staffList);
+		Outlet outlet1 = new Outlet(1, "North Outlet", "North Avenue 9", staffList, transactionList);
 
 		outletList.add(outlet1);
 
@@ -64,7 +64,7 @@ public class ReturnsTracker {
 
 						if (customerOption == 1) {
 							transactionMenu(transactionList, user, staffList);
-							
+
 						} else if (customerOption == 2) {
 							ArrayList<Transaction> userList = new ArrayList<Transaction>();
 
@@ -88,56 +88,99 @@ public class ReturnsTracker {
 
 			} else if (option == 2) {
 				// Retailer
+				viewOutlet(outletList);
 
-				int retailerOption = 0;
+				Outlet retailOutlet = null;
+				System.out.println("Choose Outlet");
+				int outletId = Helper.readInt("Enter outlet ID > ");
 
-				while (retailerOption != 6) {
-					if (retailerOption == 1) {
-						viewTransactions(transactionList);
+				for (Outlet o : outletList) {
+					if (outletId == o.getOutletId()) {
+						retailOutlet = o;
+						break;
+					}
+				}
 
-					} else if (retailerOption == 2) {
-						archiveMenu(transactionList, archiveList);
+				if (retailOutlet != null) {
+					ArrayList<Transaction> outletTransactionList = retailOutlet.getTransactionList();
+					ArrayList<Staff> outletStaffList = retailOutlet.getStaffList();
 
-					} else if (retailerOption == 3) {
-						viewTransactions(archiveList);
+					int retailOption = 0;
 
-					} else if (retailerOption == 4) {
-						// --update customer return(policy) history--//
-						updateReturnHistory(transactionList, archiveList);
-						// --//
-					} else if (retailerOption == 5) {
-						viewTransactions(transactionList);
+					while (retailOption != 4) {
+						ReturnsTracker.setHeader("RETAILER MENU");
+						System.out.println("1. Manage transactions");
+						System.out.println("2. Manage products");
+						System.out.println("3. Manage staff");
+						System.out.println("6. Quit");
+						retailOption = Helper.readInt("Enter option: ");
 
-						int choice = Helper.readInt("Select transaction to update: ");
-						updateTransaction(transactionList.get(choice - 1), staffList);
+						// Transactions Menu
+						if (retailOption == 1) {
+
+							int transactionOption = 0;
+							while (transactionOption != 6) {
+								ReturnsTracker.setHeader("TRANSACTIONS MENU");
+								System.out.println("1. View transactions");
+								System.out.println("2. Archive transactions");
+								System.out.println("3. View archive");
+								System.out.println("4. Update return history");
+								System.out.println("5. Update transaction");
+								System.out.println("6. Quit");
+								transactionOption = Helper.readInt("Enter option: ");
+
+								if (transactionOption == 1) {
+									viewTransactions(outletTransactionList);
+
+								} else if (transactionOption == 2) {
+									archiveMenu(outletTransactionList, archiveList);
+
+								} else if (transactionOption == 3) {
+									viewTransactions(archiveList);
+
+								} else if (transactionOption == 4) {
+									// --update customer return(policy) history--//
+									updateReturnHistory(outletTransactionList, archiveList);
+									// --//
+								} else if (transactionOption == 5) {
+									viewTransactions(outletTransactionList);
+
+									int choice = Helper.readInt("Select transaction to update: ");
+									updateTransaction(outletTransactionList.get(choice - 1), outletStaffList);
+								}
+							}
+
+							// Product menu
+						} else if (retailOption == 2) {
+														
+
+						} else if (retailOption == 3) {
+							
+						}
 					}
 
-					ReturnsTracker.setHeader("RETAILER MENU");
-					System.out.println("1. View transactions");
-					System.out.println("2. Archive transactions");
-					System.out.println("3. View archive");
-					System.out.println("4. Update return history");
-					System.out.println("5. Update transaction");
-					System.out.println("6. Quit");
-					retailerOption = Helper.readInt("Enter option: ");
+				} else {
+					System.out.println("Retail outlet not found");
 				}
+
 			} else if (option == 3) {
 				// Administrator
 				// --Manage Customer (add customer, view customer, delete customer)--//
-				int administratorOption = 0;
-				while (administratorOption != 4) {
-					manageCusMenu();
-					option = Helper.readInt("Enter option > ");
-					if (option == ADDCUS) {
-						Customer cObj = inputCustomer();
-						addCustomer(customerList, cObj);
-					} else if (option == VIEWCUS) {
-						viewCustomer(customerList);
-					} else if (option == DELETECUS) {
-						deleteCustomer(customerList);
-					} else if (option == 4) {
-						System.out.println("GoodBye");
+				int adminOption = 0;
+				while (adminOption != 4) {
+
+					setHeader("Admin Menu");
+					System.out.println("1. Manage customers");
+					System.out.println("2. Manage outlets");
+					System.out.println("3. Misc.");
+					adminOption = Helper.readInt("Enter option > ");
+
+					if (adminOption == 1) {
+						manageCustomers(customerList);
+					} else if (adminOption == 2) {
+						manageOutlets(outletList);
 					}
+
 				}
 				// --//
 			}
@@ -146,6 +189,50 @@ public class ReturnsTracker {
 			option = Helper.readInt("Enter option: ");
 		}
 
+	}
+
+	/**
+	 * @param outletList
+	 * @param option
+	 */
+	private static void manageOutlets(ArrayList<Outlet> outletList) {
+		int option = -1;
+		while (option != 4) {
+			manageOutletMenu();
+			option = Helper.readInt("Enter option > ");
+
+			if (option == 1) {
+				Outlet outlet = inputOutlet();
+				addOutlet(outletList, outlet);
+			} else if (option == 2) {
+				viewOutlet(outletList);
+			} else if (option == 3) {
+				deleteOutlet(outletList);
+			}
+		}
+	}
+
+	/**
+	 * @param customerList
+	 */
+	private static void manageCustomers(ArrayList<Customer> customerList) {
+		int option = -1;
+
+		while (option != 4) {
+			manageCusMenu();
+			option = Helper.readInt("Enter option > ");
+
+			if (option == ADDCUS) {
+				Customer cObj = inputCustomer();
+				addCustomer(customerList, cObj);
+			} else if (option == VIEWCUS) {
+				viewCustomer(customerList);
+			} else if (option == DELETECUS) {
+				deleteCustomer(customerList);
+			} else if (option == 4) {
+				System.out.println("GoodBye");
+			}
+		}
 	}
 
 	// Customer login
@@ -250,8 +337,7 @@ public class ReturnsTracker {
 		while (option != 4) {
 			System.out.println("1. Change return type");
 			System.out.println("2. Change staff");
-			System.out.println("3. Change product");
-			System.out.println("4. Change status");
+			System.out.println("3. Change status");
 			System.out.println("4. EXIT");
 			option = Helper.readInt("Enter option: ");
 
@@ -264,7 +350,8 @@ public class ReturnsTracker {
 				t.setStaffInfo(staffList.get(choice - 1));
 
 			} else if (option == 3) {
-
+				String status = Helper.readString("Enter new status: ");
+				t.setStatus(status);
 			}
 			viewTransactions(viewList);
 		}
@@ -382,6 +469,69 @@ public class ReturnsTracker {
 	}
 	// --//
 
+	public static Outlet inputOutlet() {
+		Helper.line(40, "-");
+		System.out.println("ADD NEW OUTLET");
+		int id = Helper.readInt("Enter outlet ID > ");
+		String name = Helper.readString("Enter name > ");
+		String address = Helper.readString("Enter address > ");
+
+		Outlet outlet = new Outlet(id, name, address, new ArrayList<Staff>(), new ArrayList<Transaction>());
+		return outlet;
+	}
+
+	public static void addOutlet(ArrayList<Outlet> outletList, Outlet outlet) {
+		outletList.add(outlet);
+		System.out.println("Outlet Added!");
+	}
+
+	// return customer string
+	public static String retriveAllOutlet(ArrayList<Outlet> outletList) {
+		String output = "";
+		for (Outlet o : outletList) {
+			output += String.format("%-5s %-15s %-20s %-5s\n", o.getOutletId(), o.getOutletName(), o.getAddress(),
+					o.getStaffList().size());
+		}
+		return output;
+	}
+
+	public static void viewOutlet(ArrayList<Outlet> outletList) {
+		Helper.line(50, "-");
+		String output = String.format("%-5s %-15s %-20s %-5s\n", "ID", "Outlet Name", "Address", "Staff Count");
+		output += retriveAllOutlet(outletList);
+		System.out.println(output);
+	}
+
+	// return boolean value if customerList is removed
+	public static boolean removeOutlet(ArrayList<Outlet> outletList, int id) {
+		boolean isRemoved = false;
+		for (int i = 0; i < outletList.size(); i++) {
+			if (id == outletList.get(i).getOutletId()) {
+				outletList.remove(i);
+				isRemoved = true;
+			}
+		}
+		return isRemoved;
+	}
+
+	public static void deleteOutlet(ArrayList<Outlet> outletList) {
+		viewOutlet(outletList);
+		int id = Helper.readInt("Enter Outlet ID to remove > ");
+		Boolean isRemoved = removeOutlet(outletList, id);
+		if (isRemoved) {
+			System.out.println("Outlet Removed!");
+		} else {
+			System.out.println("Outlet not found!");
+		}
+	}
+
+	public static void getMostProducts(ArrayList<Transaction> transactionList) {
+
+		for (Transaction t : transactionList) {
+
+		}
+	}
+
 	// Menu
 	public static void menu() {
 		ReturnsTracker.setHeader("Diso Tracking System");
@@ -401,6 +551,14 @@ public class ReturnsTracker {
 		System.out.println("4. Quit");
 	}
 	// --//
+
+	public static void manageOutletMenu() {
+		ReturnsTracker.setHeader("Manage Outlet Menu");
+		System.out.println("1. Add Outlet");
+		System.out.println("2. View Outlet");
+		System.out.println("3. Delete Outlet");
+		System.out.println("4. Quit");
+	}
 
 	public static void setHeader(String header) {
 		Helper.line(80, "-");

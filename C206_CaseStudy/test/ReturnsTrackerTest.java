@@ -15,6 +15,9 @@ public class ReturnsTrackerTest {
 
 	private Transaction t1;
 	private Transaction t2;
+	
+	private Product p1;
+	private Product p2;
 
 	ArrayList<Outlet> outletList = new ArrayList<Outlet>();
 	ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
@@ -33,9 +36,11 @@ public class ReturnsTrackerTest {
 		c2 = new Customer("Peter", "Peter1", "pass");
 		s1 = new Staff("John", 100);
 		s2 = new Staff("Donald", 200);
+		p1 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing");
+		p2 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage");
 		
-		t1 = new Transaction("1111", c1, "Top up", s1);
-		t2 = new Transaction("2222", c2, "Exchange", s2);
+		t1 = new Transaction("1111", c1, "Top up", s1, p1);
+		t2 = new Transaction("2222", c2, "Exchange", s2, p2);
 	}
 
 	@Test
