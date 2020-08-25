@@ -299,4 +299,42 @@ public class C206_CaseStudy {
 	    }
 	
 	}
+
+//--------------------------------SPRINT 2	-----------------------------------//
+public static void updateReturnHistory(ArrayList<Staff> staffList, String Outlet) {
+	 C206_CaseStudy.viewAllOutlets(staffList, Outlet);
+       String id = Helper.readString("Enter staff ID to be updated > ");
+       Boolean isUpdate = deleteStaff(staffList, id);
+
+       
+       if (isUpdate == false) {
+           System.out.println("Invalid update");
+       } else {
+           System.out.println(id + " has been updated");
+       }
+   }
+
+public static void updateStaff(Staff staff) {
+	
+	System.out.println("UPDATE STAFF");
+	System.out.println("1. Change ID"); 
+	System.out.println("2. Change name");
+	Helper.line(80, "-");
+	
+	int option = Helper.readInt("Enter option > ");
+	
+	if (option == 1) {
+		String ID = Helper.readString("Change ID > ");
+		staff.setStaffId(ID);
+	} else if (option == 2) {
+	String name = Helper.readString("Change name > ");
+	staff.setName(name);
+	} 
+	ArrayList<Staff> staffList = new ArrayList<Staff>();
+	staffList.add(staff);
+	
+	C206_CaseStudy.viewAllOutlets(staffList, staff.getOutletId());
+	
+}
+}
 >>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy

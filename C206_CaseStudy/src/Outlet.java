@@ -3,15 +3,87 @@ import java.util.ArrayList;
 public class Outlet {
 
 	private int outletId;
+	private String outletName;
 	private String address;
 	private ArrayList<Staff> staffList;
-	
+	private ArrayList<Transaction> transactionList;
+	private ArrayList<Transaction> archiveList;
+	private ArrayList<Product> productList;
 
-	public Outlet(int outletId, String address, ArrayList<Staff> staffList) {
-		super();
+	public Outlet(int outletId, String outletName, String address, ArrayList<Staff> staffList, ArrayList<Transaction> transactionList, ArrayList<Transaction> archiveList, ArrayList<Product> productList) {
 		this.outletId = outletId;
+		this.outletName = outletName;
 		this.address = address;
 		this.staffList = staffList;
+		this.transactionList = transactionList;
+		this.archiveList = archiveList;
+		this.productList = productList;
+	}
+	
+	public Outlet(int outletId, String outletName, String address, ArrayList<Staff> staffList, ArrayList<Transaction> transactionList) {
+		this.outletId = outletId;
+		this.outletName = outletName;
+		this.address = address;
+		this.staffList = staffList;
+		this.transactionList = transactionList;
+		this.archiveList = new ArrayList<Transaction>();
+		this.productList = new ArrayList<Product>();
+	}
+	
+	/**
+	 * @return the productList
+	 */
+	public ArrayList<Product> getProductList() {
+		return productList;
+	}
+
+	/**
+	 * @param productList the productList to set
+	 */
+	public void setProductList(ArrayList<Product> productList) {
+		this.productList = productList;
+	}
+	
+	/**
+	 * @return the archiveList
+	 */
+	public ArrayList<Transaction> getArchiveList() {
+		return archiveList;
+	}
+
+	/**
+	 * @param archiveList the archiveList to set
+	 */
+	public void setArchiveList(ArrayList<Transaction> archiveList) {
+		this.archiveList = archiveList;
+	}
+
+	/**
+	 * @return the transactionList
+	 */
+	public ArrayList<Transaction> getTransactionList() {
+		return transactionList;
+	}
+
+	/**
+	 * @param transactionList the transactionList to set
+	 */
+	public void setTransactionList(ArrayList<Transaction> transactionList) {
+		this.transactionList = transactionList;
+	}
+
+	/**
+	 * @return the outletName
+	 */
+	public String getOutletName() {
+		return outletName;
+	}
+
+	/**
+	 * @param outletName the outletName to set
+	 */
+	public void setOutletName(String outletName) {
+		this.outletName = outletName;
 	}
 
 	public int getOutletId() {
