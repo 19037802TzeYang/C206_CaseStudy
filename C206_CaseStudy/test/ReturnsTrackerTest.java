@@ -39,10 +39,11 @@ public class ReturnsTrackerTest {
 	@Before
 	public void setUp() throws Exception {
 		// prepare test data
-		c1 = new Customer("Bob", "Bob1", "pass");
-		c2 = new Customer("Peter", "Peter1", "pass");
+		c1 = new Customer("Bob", "Bob1", "pass", "", p1);
+		c2 = new Customer("Peter", "Peter1", "pass", "", p2);
 		s1 = new Staff("John", 100);
 		s2 = new Staff("Donald", 200);
+<<<<<<< HEAD
 
 		p1 = new Product("01", "Water", 2.50, "vendor", "", true);
 		p2 = new Product("02", "Tea", 2.50, "vendor", "", true);
@@ -50,6 +51,15 @@ public class ReturnsTrackerTest {
 		p4 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", false);
 
 		t1 = new Transaction("1111", c1, "Top up", s1, p4);
+=======
+
+		p1 = new Product("01", "Water", 2.50, "vendor", "", false);
+		p2 = new Product("01", "Water", 2.50, "vendor", "", false);
+		p3 = new Product("ID1331", "Heron Preston", 35.0, "Heron Preston Johnson", "Clothing", false);
+		p4 = new Product("ID1111", "Beer", 35.0, "Hein", "Beverage", false);
+		
+		t1 = new Transaction("1111", c1, "Top up", s1, p1);
+>>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy.git
 		t2 = new Transaction("2222", c2, "Exchange", s2, p2);
 		t3 = new Transaction("3333", c1, "Refund", s2, p4);
 
@@ -125,6 +135,7 @@ public class ReturnsTrackerTest {
 
 		assertSame("Test that transaction is added same as 1st archived list?", t1, archiveList.get(0));
 	}
+<<<<<<< HEAD
 
 	@Test
 	public void getMostReturnsTest() {
@@ -191,6 +202,8 @@ public class ReturnsTrackerTest {
 		assertEquals("Test that transaction arraylist size is 0?", 0, archiveList.size());
 	}
 	// --//
+=======
+>>>>>>> branch 'master' of https://github.com/19037802TzeYang/C206_CaseStudy.git
 
 	@After
 	public void tearDown() throws Exception {
