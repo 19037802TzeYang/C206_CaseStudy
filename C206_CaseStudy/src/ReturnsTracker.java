@@ -532,7 +532,6 @@ public class ReturnsTracker {
 		do {
 			setHeader("UPDATE RETURN HISTORY");
 			viewCustomer(customerList);
-			// take input from available transactions if input is -1 loop will stop
 			no = Helper.readInt("Enter No to update or -1 to cancel > ");
 			// if no is -1 exit from loop
 			if (no == -1) {
@@ -540,9 +539,7 @@ public class ReturnsTracker {
 			} else if (no < 1 || no > customerList.size()) {
 				System.out.println("Invalid!");
 			} else {
-				// if transaction no is valid take updated values
 				int updationOption = 0;
-				// check if transaction is updated in order to move transaction from archive
 				boolean updated = false;
 
 				while (updationOption != 3) {

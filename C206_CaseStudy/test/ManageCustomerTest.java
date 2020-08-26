@@ -35,7 +35,6 @@ public class ManageCustomerTest {
 	//--Manage Customer test (add customer, view customer, delete customer)--//
 	@Test
 	public void c206_testAddCus() {
-		// fail("Not yet implemented");
 		assertTrue("C206_CaseStudy_SampleTest ", true);
 		// test if customerList is not null - boundary
 		assertNotNull("Check if there is vlaid Customer in arrayList to add to", customerList);
@@ -49,7 +48,6 @@ public class ManageCustomerTest {
 
 	@Test
 	public void c206_testViewCus() {
-		// fail("Not yet implemented");
 		assertTrue("C206_CaseStudy_SampleTest ", true);
 		// test if customerList is not null - boundary
 		assertNotNull("Check if there is valid Customer in arrayList to view", customerList);
@@ -57,8 +55,7 @@ public class ManageCustomerTest {
 		String allCustomer = ReturnsTracker.retriveAllCustomer(customerList);
 		String empStr = "";
 		assertEquals("check if customerList is empty", empStr, allCustomer);
-		// given an empty list, after adding 2 customer, test if the size of the list is
-		// 2 - normal
+		// given an empty list, after adding 2 customer, test if the size of the list is 2 - normal
 		ReturnsTracker.addCustomer(customerList, cObj1);
 		ReturnsTracker.addCustomer(customerList, cObj2);
 		assertEquals("Check arrayList size is 2", 2, customerList.size());
@@ -66,12 +63,10 @@ public class ManageCustomerTest {
 
 	@Test
 	public void c206_testDeleteCus() {
-		// fail("Not yet implemented");
+		assertTrue("C206_CaseStudy_SampleTest ", true);
 		// test if customerList is not null - boundary
 		assertNotNull("Check if there is valid Customer in arrayList to delete", customerList);
-		assertTrue("C206_CaseStudy_SampleTest ", true);
-		// test if the given customer is successfully removed from the given username -
-		// normal
+		// test if the given customer is successfully removed from the given username - normal
 		ReturnsTracker.addCustomer(customerList, cObj1);
 		Boolean success = ReturnsTracker.removeCustomer(customerList, "u1");
 		assertTrue("check if customer is removed from a given username", success);
@@ -81,7 +76,7 @@ public class ManageCustomerTest {
 	//--update customer return history test--//
 	@Test
 	public void updateReturnHistoryTest() {
-		// Test if transaction list is not null, so that the transaction can be added
+		// Test if customer list is not null, so that the customer can be added
 		assertNotNull("Test if there is valid customer arraylist to add to", customerList);
 		// given an empty list, after adding 1 customer, the list's size is 1 - normal
 		ReturnsTracker.addCustomer(customerList, cObj1);
